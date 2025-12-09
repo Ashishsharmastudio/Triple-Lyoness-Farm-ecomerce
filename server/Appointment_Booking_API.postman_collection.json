@@ -1,0 +1,396 @@
+{
+  "info": {
+    "name": "Appointment Booking API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "1.1 Register Owner",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "name": "Admin User",
+                "email": "admin@example.com",
+                "password": "Admin123!",
+                "phone": "+1234567890",
+                "role": "owner"
+              },
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "1.2 Register User",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "name": "John Doe",
+                "email": "ashish@example.com",
+                "password": "Password123!",
+                "phone": "+1234567890"
+              },
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "1.3 Login as Owner",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "email": "admin@example.com",
+                "password": "Admin123!"
+              },
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "1.4 Login as User",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "email": "ashish@example.com",
+                "password": "Password123!"
+              },
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Dashboard (Owner Only)",
+      "item": [
+        {
+          "name": "2.1 Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/dashboard/stats",
+            "headers": {
+              "Authorization": "Bearer {{ownerToken}}"
+            }
+          }
+        },
+        {
+          "name": "2.2 Get All Appointments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/appointments/all",
+            "headers": {
+              "Authorization": "Bearer {{ownerToken}}"
+            },
+            "description": "Fetch all appointments (Owner/Admin only)"
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/appointments/all"
+              },
+              "status": "OK",
+              "code": 200,
+              "body": {
+                "success": true,
+                "data": [
+                  {
+                    "_id": "appointment_id",
+                    "user": {
+                      "_id": "user_id",
+                      "name": "User Name",
+                      "email": "user@email.com",
+                      "phone": "phone_number"
+                    },
+                    "service": {
+                      "_id": "service_id",
+                      "name": "Service Name",
+                      "duration": 30,
+                      "price": 100
+                    },
+                    "date": "2024-03-20T10:00:00.000Z",
+                    "message": "Appointment message",
+                    "fileUrl": "file_url",
+                    "status": "Pending",
+                    "createdAt": "2024-02-01T18:04:48.281Z",
+                    "updatedAt": "2024-02-01T18:23:17.510Z"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.3 Get Service Management",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/dashboard/services",
+            "headers": {
+              "Authorization": "Bearer {{ownerToken}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Services",
+      "item": [
+        {
+          "name": "NEW: Get Services by Category",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services/category/Smart Home"
+          }
+        },
+        {
+          "name": "NEW: Get Services by Solution Set",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services/solution-set/Smart Appliances"
+          }
+        },
+        {
+          "name": "NEW: Get Home Specific Programs",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services/home-programs"
+          }
+        },
+        {
+          "name": "NEW: Get Smart Appliances",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services/smart-appliances"
+          }
+        },
+        {
+          "name": "NEW: Get Advanced Systems",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services/advanced-systems"
+          }
+        },
+        {
+          "name": "NEW: Search Services",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services/search?q=automation"
+          }
+        },
+        {
+          "name": "NEW: Bulk Update Service Prices",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/services/bulk-update",
+            "headers": { "Authorization": "Bearer {{ownerToken}}" },
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "updates": [
+                  { "serviceId": "service_id_1", "newPrice": 300 },
+                  { "serviceId": "service_id_2", "newPrice": 150 }
+                ]
+              },
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "3.1 Create Service (Owner Only)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/services",
+            "headers": { "Authorization": "Bearer {{ownerToken}}" },
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "name": "Home Energy Optimization",
+                "description": "AI-powered energy consumption monitoring",
+                "duration": 40,
+                "price": 400,
+                "category": "Home-Specific Services",
+                "solutionSet": "Home Optimization",
+                "specificCategory": "Energy Management",
+                "imageUrl": "https://example.com/energy.jpg"
+              },
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "3.2 Get All Services (Public)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services"
+          }
+        },
+        {
+          "name": "3.3 Get Service by ID (Public)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/services/{{serviceId}}"
+          }
+        },
+        {
+          "name": "3.4 Update Service (Owner Only)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/services/{{serviceId}}",
+            "headers": {
+              "Authorization": "Bearer {{ownerToken}}"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "price": 60
+              },
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "3.5 Delete Service (Owner Only)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/services/{{serviceId}}",
+            "headers": {
+              "Authorization": "Bearer {{ownerToken}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Appointments (Authenticated Users)",
+      "item": [
+        {
+          "name": "4.1 Create Appointment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/appointments",
+            "headers": {
+              "Authorization": "Bearer {{userToken}}"
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "service",
+                  "value": "{{serviceId}}"
+                },
+                {
+                  "key": "date",
+                  "value": "2024-03-20T10:00:00Z"
+                },
+                {
+                  "key": "message",
+                  "value": "Special requests here"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/file.pdf"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.2 Get User Appointments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/appointments",
+            "headers": {
+              "Authorization": "Bearer {{userToken}}"
+            }
+          }
+        },
+        {
+          "name": "4.3 Update Appointment",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/appointments/{{appointmentId}}",
+            "headers": {
+              "Authorization": "Bearer {{userToken}}"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "status": "Confirmed",
+                "date": "2024-03-21T15:00:00Z",
+                "message": "Updated special requests",
+                "confirmAttendance": true
+              },
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "ownerToken",
+      "value": "paste_owner_login_token_here"
+    },
+    {
+      "key": "userToken",
+      "value": "paste_user_login_token_here"
+    },
+    {
+      "key": "serviceId",
+      "value": "paste_service_id_here"
+    },
+    {
+      "key": "appointmentId",
+      "value": "paste_appointment_id_here"
+    }
+  ]
+}
