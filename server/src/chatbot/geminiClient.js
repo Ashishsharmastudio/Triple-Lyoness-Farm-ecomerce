@@ -42,7 +42,6 @@ class GeminiClient {
 
       const result = await model.generateContent(prompt);
       return result.response.text();
-      console.log(result.response.text());
     } catch (error) {
       throw new Error(`Failed to generate response: ${error.message}`);
     }

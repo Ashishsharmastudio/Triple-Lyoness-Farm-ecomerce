@@ -64,6 +64,43 @@ class ChatController {
 
     return services[0];
   }
+
+  async handleServiceSpecificQuestion(serviceId, question, req, res) {
+    try {
+      console.log(`Request received for service ${serviceId}:`, { question });
+      
+      console.log("Generating service-specific response with GeminiClient...");
+      const response = await GeminiClient.getServiceSpecificResponse(serviceId, question);
+      console.log("Generated response:", response);
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          answer: response,
+        },
+      });
+    } catch (error) {
+      console.error("Error in handleServiceSpecificQuestion:", error);
+      return res.status(500).json({ success: false, error: error.message });
+    }
+  }
+
+  async getChatHistory(req, res) {
+    try {
+      const { userId } = req.params;
+      console.log(`Fetching chat history for user ${userId}`);
+      
+      const chatHistory = await Chat.find({ userId }).sort({ timestamp: 1 });
+      
+      return res.status(200).json({
+        success: true,
+        data: chatHistory,
+      });
+    } catch (error) {
+      console.error("Error in getChatHistory:", error);
+      return res.status(500).json({ success: false, error: error.message });
+    }
+  }
 }
 
 module.exports = new ChatController();
